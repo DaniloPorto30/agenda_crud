@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+<h1 align="center">
+<img src="https://github.com/DaniloPorto30/agenda_crud/blob/master/lista_contatos.png">
+</h1>
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
