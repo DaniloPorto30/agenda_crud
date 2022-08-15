@@ -11,13 +11,13 @@ class ContactList extends StatelessWidget {
     },
     {
       'nome': 'Maysa',
-      'telefone': '999794062',
+      'telefone': '999795565',
       'avatar':
           'https://cdn.pixabay.com/photo/2014/04/02/14/10/female-306407_960_720.png'
     },
     {
       'nome': 'Ines',
-      'telefone': '34694552',
+      'telefone': '34654056',
       'avatar':
           'https://cdn.pixabay.com/photo/2014/03/24/17/19/teacher-295387_960_720.png'
     },
