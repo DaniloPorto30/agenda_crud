@@ -1,8 +1,11 @@
+import 'package:agenda_crud/app/database/script.dart';
 import 'package:agenda_crud/app/my_app.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ContactList extends StatelessWidget {
-  final lista = [
+  /* final lista = [
     {
       'nome': 'Danilo',
       'telefone': '999595081',
@@ -22,42 +25,68 @@ class ContactList extends StatelessWidget {
           'https://cdn.pixabay.com/photo/2014/03/24/17/19/teacher-295387_960_720.png'
     },
   ];
+*/
+
+  Future<List<Map<String, dynamic>>> _buscar() async {
+    String path = join(await getDatabasesPath(), 'banco');
+    Database db = await openDatabase(path, version: 1, onCreate: (db, v) {
+      db.execute(createTable);
+      db.execute(insert1);
+      db.execute(insert2);
+      db.execute(insert3);
+    });
+    return db.query('contact');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Lista de Contatos'),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.of(context).pushNamed(MyApp.CONTACT_FORM);
-              })
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: lista.length,
-        itemBuilder: (context, i) {
-          dynamic contato = lista[i];
-          var avatar = CircleAvatar(
-            backgroundImage: NetworkImage(contato['avatar']),
-          );
-          return ListTile(
-            leading: avatar,
-            title: Text(contato['nome']),
-            subtitle: Text(contato['telefone']),
-            trailing: Container(
-              width: 100,
-              child: Row(
-                children: [
-                  IconButton(icon: Icon(Icons.edit), onPressed: null),
-                  IconButton(icon: Icon(Icons.delete), onPressed: null),
+    return FutureBuilder(
+        future: _buscar(),
+        builder: (context, futuro) {
+          if (futuro.hasData) {
+            var lista = futuro.data as List;
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Lista de Contatos'),
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(MyApp.CONTACT_FORM);
+                      })
                 ],
               ),
-            ),
-          );
-        },
-      ),
-    );
+              body: ListView.builder(
+                itemCount: lista.length,
+                itemBuilder: (context, i) {
+                  dynamic contato = lista[i];
+                  var avatar = CircleAvatar(
+                    backgroundImage: NetworkImage(contato['url_avatar']),
+                  );
+                  return ListTile(
+                    leading: avatar,
+                    title: Text(contato['nome']),
+                    subtitle: Text(contato['telefone']),
+                    trailing: Container(
+                      width: 100,
+                      child: Row(
+                        children: [
+                          IconButton(icon: Icon(Icons.edit), onPressed: null),
+                          IconButton(icon: Icon(Icons.delete), onPressed: null),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          } else {
+            return Scaffold();
+          }
+        });
+
+    /*
+     
+    */
   }
 }
