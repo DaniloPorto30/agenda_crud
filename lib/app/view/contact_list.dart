@@ -1,8 +1,7 @@
-import 'package:agenda_crud/app/database/script.dart';
+import 'package:agenda_crud/app/database/sqlite/dao/contact_dao_impl.dart';
+import 'package:agenda_crud/app/domain/entities/contact.dart';
 import 'package:agenda_crud/app/my_app.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
 class ContactList extends StatelessWidget {
   /* final lista = [
@@ -27,15 +26,8 @@ class ContactList extends StatelessWidget {
   ];
 */
 
-  Future<List<Map<String, dynamic>>> _buscar() async {
-    String path = join(await getDatabasesPath(), 'banco');
-    Database db = await openDatabase(path, version: 1, onCreate: (db, v) {
-      db.execute(createTable);
-      db.execute(insert1);
-      db.execute(insert2);
-      db.execute(insert3);
-    });
-    return db.query('contact');
+  Future<List<Contact>> _buscar() async {
+    return ContactDAOimpl().find();
   }
 
   @override
@@ -61,12 +53,12 @@ class ContactList extends StatelessWidget {
                 itemBuilder: (context, i) {
                   dynamic contato = lista[i];
                   var avatar = CircleAvatar(
-                    backgroundImage: NetworkImage(contato['url_avatar']),
+                    backgroundImage: NetworkImage(contato.urlAvatar),
                   );
                   return ListTile(
                     leading: avatar,
-                    title: Text(contato['nome']),
-                    subtitle: Text(contato['telefone']),
+                    title: Text(contato.nome),
+                    subtitle: Text(contato.telefone),
                     trailing: Container(
                       width: 100,
                       child: Row(
@@ -84,9 +76,7 @@ class ContactList extends StatelessWidget {
             return Scaffold();
           }
         });
-
-    /*
-     
+    /*      
     */
   }
 }
